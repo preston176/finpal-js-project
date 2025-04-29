@@ -18,6 +18,7 @@ const Transactions = () => {
                     "http://localhost:8000/api/admin/transactions"
                 );
 
+
                 if (response.data) {
                     setTransactions(response.data);
                 }

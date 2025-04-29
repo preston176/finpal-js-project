@@ -48,7 +48,7 @@ const Income = () => {
 
   // Handle Add Income
   const handleAddIncome = async (income) => {
-    const { source, amount, date, icon } = income;
+    const { source, amount, date, icon, phoneNumber } = income;
 
     // Validation Checks
     if (!source.trim()) {
@@ -56,7 +56,7 @@ const Income = () => {
       return;
     }
 
-    if (!amount || isNaN(amount) || Number(amount) <= 0) {
+    if (!amount || isNaN(amount) || !phoneNumber || Number(amount) <= 0) {
       toast.error("Amount should be a valid number greater than 0.");
       return;
     }
@@ -74,9 +74,28 @@ const Income = () => {
         icon,
       });
 
-      setOpenAddIncomeModal(false);
-      toast.success("Income added successfully");
-      fetchIncomeDetails();
+      // (Optional) Trigger M-Pesa Integration
+
+      const parsedPhonenumber = phoneNumber.startsWith("0")
+        ? "254" + phoneNumber.slice(1)
+        : phoneNumber;
+
+      const mpesa = await fetch("https://nodejs-mpesa-integration.onrender.com/lipa/stkpush", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount: amount, phone: parsedPhonenumber }),
+      });
+
+      console.log(mpesa);
+      if (mpesa.status == "201") {
+        setOpenAddIncomeModal(false);
+        toast.success("Income added successfully");
+        fetchIncomeDetails();
+        return;
+      }
+      console.error("M-pesa payment not successful")
     } catch (error) {
       console.error(
         "Error adding income:",
@@ -84,7 +103,6 @@ const Income = () => {
       );
     }
   };
-
   // Delete Income
   const deleteIncome = async (id) => {
     try {
@@ -107,7 +125,7 @@ const Income = () => {
       const response = await axiosInstance.get(
         API_PATHS.INCOME.DOWNLOAD_INCOME,
         {
-          responseType: "blob", 
+          responseType: "blob",
         }
       );
 
@@ -115,11 +133,11 @@ const Income = () => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "income_details.xlsx"); 
+      link.setAttribute("download", "income_details.xlsx");
       document.body.appendChild(link);
       link.click();
       link.parentNode.removeChild(link);
-      window.URL.revokeObjectURL(url); 
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error downloading income details:", error);
       toast.error("Failed to download income details. Please try again.");
@@ -128,7 +146,7 @@ const Income = () => {
 
   useEffect(() => {
     fetchIncomeDetails();
-    return () => {};
+    return () => { };
   }, []);
 
   return (

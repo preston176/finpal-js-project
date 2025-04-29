@@ -6,7 +6,7 @@ const AddExpenseForm = ({onAddExpense}) => {
   const [income, setIncome] = useState({
     category: "",
     amount: "",
-    date: "",
+    date: new Date(),
     icon: "",
   });
 

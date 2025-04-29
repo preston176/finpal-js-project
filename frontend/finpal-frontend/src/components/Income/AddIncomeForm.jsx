@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import Input from "../Inputs/Input";
 import EmojiPickerPopup from "../EmojiPickerPopup";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 
-const AddIncomeForm = ({onAddIncome}) => {
+const AddIncomeForm = ({ onAddIncome }) => {
+
+  const { user } = useContext(UserContext)
+
   const [income, setIncome] = useState({
     source: "",
     amount: "",
-    date: "",
+    date: new Date(),
     icon: "",
   });
 
@@ -24,6 +29,13 @@ const AddIncomeForm = ({onAddIncome}) => {
         onChange={({ target }) => handleChange("source", target.value)}
         label="Income Source"
         placeholder="Freelance, Salary, etc"
+        type="text"
+      />
+      <Input
+        value={user?.phoneNumber}
+        onChange={({ target }) => handleChange("phoneNumber", target.value)}
+        label="Phone number"
+        placeholder="07 00 .. (M-pesa phone number)"
         type="text"
       />
 
@@ -47,7 +59,7 @@ const AddIncomeForm = ({onAddIncome}) => {
         <button
           type="button"
           className="add-btn add-btn-fill"
-          onClick={()=>onAddIncome(income)}
+          onClick={() => onAddIncome(income)}
         >
           Add Income
         </button>

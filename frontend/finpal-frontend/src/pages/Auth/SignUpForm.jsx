@@ -14,6 +14,7 @@ const SignUpForm = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(undefined);
   const [isAdmin, setIsAdmin] = useState(false);
 
   const [error, setError] = useState(null);
@@ -56,6 +57,7 @@ const SignUpForm = () => {
         fullName,
         email,
         password,
+        phoneNumber,
         profileImageUrl,
         isAdmin,
         disabled: false,
@@ -99,6 +101,13 @@ const SignUpForm = () => {
               label="Full Name"
               placeholder="John"
               type="text"
+            />
+            <Input
+              value={phoneNumber}
+              onChange={({ target }) => setPhoneNumber(target.value)}
+              label="Phone Number (For making payments)"
+              placeholder="07 01 ...."
+              type="number"
             />
 
             <Input
