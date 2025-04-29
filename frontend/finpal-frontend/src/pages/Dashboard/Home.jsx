@@ -3,7 +3,6 @@ import DashboardLayout from "../../components/layouts/DashboardLayout";
 
 import { LuHandCoins, LuWalletMinimal } from "react-icons/lu";
 import { IoMdCard } from "react-icons/io";
-
 import { useNavigate } from "react-router-dom";
 import InfoCard from "../../components/cards/InfoCard";
 import { useUserAuth } from "../../hooks/useUserAuth";
@@ -16,11 +15,23 @@ import ExpenseTransactions from "../../components/Dashboard/ExpenseTransactions"
 import Last30DaysExpenses from "../../components/Dashboard/Last30DaysExpenses";
 import RecentIncome from "../../components/Dashboard/RecentIncome";
 import RecentIncomeWithChart from "../../components/Dashboard/RecentIncomeWithChart";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 
 const Home = () => {
-  useUserAuth();
 
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
+
+  useUserAuth();
+  useEffect(() => {
+    if (user?.isAdmin) {
+      navigate("/admin")
+      return;
+    }
+
+  }, [user, navigate]);
+
 
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -50,7 +61,7 @@ const Home = () => {
   useEffect(() => {
     fetchDashboardData();
 
-    return () => {};
+    return () => { };
   }, []);
 
   return (
@@ -101,7 +112,7 @@ const Home = () => {
           />
 
           <RecentIncomeWithChart
-            data={dashboardData?.last60DaysIncome?.transactions?.slice(0,4) || []}
+            data={dashboardData?.last60DaysIncome?.transactions?.slice(0, 4) || []}
             totalIncome={dashboardData?.totalIncome || 0}
           />
 

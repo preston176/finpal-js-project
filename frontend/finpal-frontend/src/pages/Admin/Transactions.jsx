@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import Sidebar from './components/sidebar';
 import { Download } from "lucide-react"
+import { API_PATHS } from '../../utils/apiPaths';
+import axiosInstance from '../../utils/axiosInstance';
 
 
 const Transactions = () => {
@@ -11,33 +13,23 @@ const Transactions = () => {
     const [sortOrder, setSortOrder] = useState('desc');
 
     useEffect(() => {
-        // Simulated API call – Replace with your real API
         const fetchData = async () => {
-            const income = [
-                {
-                    _id: '1',
-                    userId: 'user1',
-                    type: 'Income',
-                    categoryOrSource: 'Salary',
-                    amount: 5000,
-                    date: '2025-04-01',
-                    createdAt: '2025-04-01',
-                },
-            ];
+            try {
+                const response = await axiosInstance.get(
+                    "http://localhost:8000/api/admin/transactions/transactions"
+                );
 
-            const expenses = [
-                {
-                    _id: '2',
-                    userId: 'user1',
-                    type: 'Expense',
-                    categoryOrSource: 'Food',
-                    amount: 200,
-                    date: '2025-04-02',
-                    createdAt: '2025-04-02',
-                },
-            ];
 
-            setTransactions([...income, ...expenses]);
+                if (response.data) {
+
+                    setTransactions(response.data);
+                }
+
+
+                setTransactions(response.data);
+            } catch (err) {
+                console.error("Failed to fetch transactions", err);
+            }
         };
 
         fetchData();
@@ -96,7 +88,7 @@ const Transactions = () => {
                         </select>
 
                         <div className="flex ">
-                            <button className='border rounded-sm px-4 flex gap-2 items-center' onClick={exportToExcel}><Download /><span>Export to Excel</span></button>
+                            <button className='border rounded-sm px-4 flex gap-2 items-center cursor-pointer' onClick={exportToExcel}><Download /><span>Export to Excel</span></button>
                         </div>
                     </div>
                 </div>
@@ -116,7 +108,7 @@ const Transactions = () => {
                             {filtered.map((t) => (
                                 <tr key={t._id} className="hover:bg-gray-50">
                                     <td className="px-4 py-2 border">{t.type}</td>
-                                    <td className="px-4 py-2 border">{t.categoryOrSource}</td>
+                                    <td className="px-4 py-2 border">{t.source || t.category}</td>
                                     <td className="px-4 py-2 border">KES {t.amount.toLocaleString()}</td>
                                     <td className="px-4 py-2 border">
                                         {new Date(t.date).toLocaleDateString()}

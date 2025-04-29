@@ -1,4 +1,4 @@
-import { HandCoins, Home, PowerOffIcon, Users } from 'lucide-react'
+import { HandCoins, Home, Power, PowerOffIcon, Users } from 'lucide-react'
 import { useContext } from 'react';
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { UserContext } from '../../../context/UserContext';
@@ -51,8 +51,8 @@ function Sidebar() {
                         }
                     </div>
 
-                    <div onClick={handleLogout} className="flex gap-2 border-t p-2 cursor-pointer hover:bg-white/20">
-                        <PowerOffIcon className='text-white/80' /> Log Out
+                    <div onClick={handleLogout} className="flex gap-2 border-t pt-5 px-2 cursor-pointer hover:bg-white/20">
+                        <Power className='text-white/80' /> Log Out
                     </div>
                 </div>
             </ul>
