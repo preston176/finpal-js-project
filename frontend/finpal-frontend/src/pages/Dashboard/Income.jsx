@@ -88,7 +88,7 @@ const Income = () => {
         body: JSON.stringify({ amount: amount, phone: parsedPhonenumber }),
       });
 
-      console.log(mpesa);
+      // console.log(mpesa);
       if (mpesa.status == "201") {
         setOpenAddIncomeModal(false);
         toast.success("Income added successfully");

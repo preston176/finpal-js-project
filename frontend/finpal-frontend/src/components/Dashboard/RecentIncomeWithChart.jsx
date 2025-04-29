@@ -18,7 +18,7 @@ const RecentIncomeWithChart = ({ data, totalIncome }) => {
   useEffect(() => {
     prepareChartData();
 
-    return () => {};
+    return () => { };
   }, [data]);
 
   return (
@@ -30,7 +30,7 @@ const RecentIncomeWithChart = ({ data, totalIncome }) => {
       <CustomPieChart
         data={chartData}
         label="Total Income"
-        totalAmount={`$${totalIncome}`}
+        totalAmount={`Kes ${totalIncome}`}
         showTextAnchor
         colors={COLORS}
       />
