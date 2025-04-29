@@ -15,6 +15,7 @@ import Income from "./pages/Dashboard/Income";
 import Expense from "./pages/Dashboard/Expense";
 import AdminPage from "./pages/Admin/AdminPage";
 import Users from "./pages/Admin/Users";
+import Transactions from "./pages/Admin/Transactions";
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
             {/* Admin routes */}
             <Route path="/admin" exact element={<AdminPage />} />
             <Route path="/admin/users" exact element={<Users />} />
+            <Route path="/admin/transactions" exact element={<Transactions />} />
           </Routes>
         </Router>
 

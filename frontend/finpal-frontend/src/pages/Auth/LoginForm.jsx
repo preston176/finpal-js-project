@@ -42,6 +42,14 @@ const LoginForm = () => {
       if (token) {
         localStorage.setItem("token", token);
         updateUser(user);
+        if (user.disabled) {
+          setError("Account Disabled, please contact your Admin")
+          return;
+        }
+        if (user.isAdmin) {
+          navigate("/admin")
+        }
+
         navigate("/dashboard");
       }
     } catch (error) {

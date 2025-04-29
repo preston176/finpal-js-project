@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import AuthLayout from "../../components/Layouts/AuthLayout";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../../components/Inputs/Input";
@@ -57,6 +57,8 @@ const SignUpForm = () => {
         email,
         password,
         profileImageUrl,
+        isAdmin,
+        disabled: false,
       });
 
       const { token, user } = response.data;
@@ -64,6 +66,10 @@ const SignUpForm = () => {
       if (token) {
         localStorage.setItem("token", token);
         updateUser(user);
+        if (user.isAdmin) {
+          navigate("/admin")
+          return
+        }
         navigate("/dashboard");
       }
     } catch (error) {
@@ -115,7 +121,9 @@ const SignUpForm = () => {
             <div className="flex w-fit">
               <Input
                 value={isAdmin}
-                onChange={({ target }) => setIsAdmin(target.value)}
+                onChange={(e) => {
+                  setIsAdmin(e.target.checked);
+                }}
                 label="Are you an admin?"
                 className={""}
                 type="checkbox"

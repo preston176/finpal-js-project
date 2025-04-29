@@ -1,37 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Sidebar from './components/sidebar';
 
 function AdminPage() {
 
-    const links = [
-        {
-            href: "/admin",
-            label: "Overview",
-        },
-        {
-            href: "/admin/users",
-            label: "Users",
-        },
-        {
-            href: "/admin/transactions",
-            label: "Transactions",
-        },
-    ]
+
 
     return (
         <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
             {/* Sidebar */}
-            <div className="w-full flex-none bg-gray-800 text-white md:w-64">
-                <div className="p-4 text-lg font-bold">Admin Panel</div>
-                <ul className="space-y-2 p-4">
-
-                    {
-                        links.map((link, index) => (
-                            <Link key={index} to={`${link.href}`}>  <li className="hover:bg-gray-700 p-2 rounded cursor-pointer" >{link.label}</li></Link>
-                        ))
-                    }
-                </ul>
-            </div>
+            <Sidebar />
 
             {/* Dashboard */}
             <div className="flex-grow p-6 md:overflow-y-auto md:p-12 bg-gray-100">
