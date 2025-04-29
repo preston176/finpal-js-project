@@ -48,8 +48,8 @@ const LoginForm = () => {
         }
         if (user.isAdmin) {
           navigate("/admin")
+          return;
         }
-
         navigate("/dashboard");
       }
     } catch (error) {

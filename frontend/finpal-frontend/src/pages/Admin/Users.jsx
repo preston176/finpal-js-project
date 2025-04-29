@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Sidebar from './components/sidebar';
+import axiosInstance from '../../utils/axiosInstance';
 
 function Users() {
     const [users, setUsers] = useState([]);
@@ -8,21 +9,16 @@ function Users() {
     const [filterStatus, setFilterStatus] = useState('all');
 
     useEffect(() => {
-        // Simulating fetching data from MongoDB
         const fetchData = async () => {
-            const data = [
-                {
-                    _id: "6810ad4ee42db855b24ca78b",
-                    fullName: "Preston Nyamweya",
-                    email: "prestonmayieka@gmail.com",
-                    password: "hidden",
-                    profileImageUrl: "",
-                    createdAt: "2025-04-29T10:43:26.293+00:00",
-                    updatedAt: "2025-04-29T10:43:26.293+00:00",
-                },
-            ];
-            setUsers(data);
-            setFilteredUsers(data);
+            try {
+                const { data } = await axiosInstance.get("http://localhost:8000/api/admin/users");
+                if (data) {
+                    setUsers(data);
+                    setFilteredUsers(data);
+                }
+            } catch (err) {
+                console.error("Fetching users failed", err);
+            }
         };
         fetchData();
     }, []);
@@ -43,21 +39,30 @@ function Users() {
         setFilteredUsers(filtered);
     }, [search, filterStatus, users]);
 
-    const deleteUser = (id) => {
-        const updated = users.filter(user => user._id !== id);
-        setUsers(updated);
+    const deleteUser = async (id) => {
+        try {
+            await axiosInstance.delete(`/api/admin/users/${id}`);
+            setUsers(prev => prev.filter(user => user._id !== id));
+        } catch (err) {
+            console.error("Delete failed", err);
+        }
     };
 
-    const disableUser = (id) => {
-        const updated = users.map(user =>
-            user._id === id ? { ...user, disabled: true } : user
-        );
-        setUsers(updated);
+    const toggleUserDisabled = async (id, disabled) => {
+        try {
+            await axiosInstance.patch(`/api/admin/users/${id}/disable`, { disabled });
+            setUsers(prev =>
+                prev.map(user =>
+                    user._id === id ? { ...user, disabled } : user
+                )
+            );
+        } catch (err) {
+            console.error(`${disabled ? 'Disable' : 'Enable'} failed`, err);
+        }
     };
 
     return (
         <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
-            {/* Sidebar */}
             <Sidebar />
             <div className="max-w-7xl ml-10 mt-20 w-full container">
                 <div className="flex justify-between items-center mb-6">
@@ -128,13 +133,12 @@ function Users() {
                                             </button>
                                             <button
                                                 className={`px-3 py-1 rounded ${user.disabled
-                                                    ? 'bg-gray-400 text-white cursor-not-allowed'
-                                                    : 'bg-yellow-500 hover:bg-yellow-600 text-white'
-                                                    }`}
-                                                onClick={() => disableUser(user._id)}
-                                                disabled={user.disabled}
+                                                    ? 'bg-green-500 hover:bg-green-600'
+                                                    : 'bg-yellow-500 hover:bg-yellow-600'
+                                                    } text-white`}
+                                                onClick={() => toggleUserDisabled(user._id, !user.disabled)}
                                             >
-                                                {user.disabled ? 'Disabled' : 'Disable'}
+                                                {user.disabled ? 'Enable' : 'Disable'}
                                             </button>
                                         </td>
                                     </tr>

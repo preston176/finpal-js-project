@@ -1,32 +1,26 @@
 import { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import Sidebar from './components/sidebar';
-import { Download } from "lucide-react"
-import { API_PATHS } from '../../utils/apiPaths';
+import { Download } from "lucide-react";
 import axiosInstance from '../../utils/axiosInstance';
-
 
 const Transactions = () => {
     const [transactions, setTransactions] = useState([]);
     const [filter, setFilter] = useState('All');
     const [sortKey, setSortKey] = useState('date');
     const [sortOrder, setSortOrder] = useState('desc');
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axiosInstance.get(
-                    "http://localhost:8000/api/admin/transactions/transactions"
+                    "http://localhost:8000/api/admin/transactions"
                 );
 
-
                 if (response.data) {
-
                     setTransactions(response.data);
                 }
-
-
-                setTransactions(response.data);
             } catch (err) {
                 console.error("Failed to fetch transactions", err);
             }
@@ -36,7 +30,11 @@ const Transactions = () => {
     }, []);
 
     const filtered = transactions
-        .filter((t) => filter === 'All' || t.type === filter)
+        .filter((t) =>
+            (filter === 'All' || t.type === filter) &&
+            (t.source?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+             t.category?.toLowerCase().includes(searchQuery.toLowerCase()))
+        )
         .sort((a, b) => {
             const valueA = sortKey === 'amount' ? a.amount : new Date(a.date).getTime();
             const valueB = sortKey === 'amount' ? b.amount : new Date(b.date).getTime();
@@ -52,13 +50,20 @@ const Transactions = () => {
 
     return (
         <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
-            {/* Sidebar */}
             <Sidebar />
             <div className="mt-20 ml-10 w-full container">
                 <h1 className="text-3xl font-bold mb-6">All Transactions</h1>
 
                 <div className="">
-                    <div className="flex flex-wrap gap-4 mb-6">
+                    <div className="flex flex-wrap gap-4 mb-6 items-center">
+                        <input
+                            type="text"
+                            placeholder="Search source or category..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="px-4 py-2 border rounded-lg w-60"
+                        />
+
                         <select
                             value={filter}
                             onChange={(e) => setFilter(e.target.value)}
@@ -87,12 +92,17 @@ const Transactions = () => {
                             <option value="asc">Ascending</option>
                         </select>
 
-                        <div className="flex ">
-                            <button className='border rounded-sm px-4 flex gap-2 items-center cursor-pointer' onClick={exportToExcel}><Download /><span>Export to Excel</span></button>
+                        <div className="flex">
+                            <button
+                                className='border rounded-sm px-4 flex gap-2 items-center cursor-pointer'
+                                onClick={exportToExcel}
+                            >
+                                <Download />
+                                <span>Export to Excel</span>
+                            </button>
                         </div>
                     </div>
                 </div>
-
 
                 <div className="overflow-x-auto">
                     <table className="min-w-full text-sm border border-gray-300">
@@ -105,8 +115,11 @@ const Transactions = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {filtered.map((t) => (
-                                <tr key={t._id} className="hover:bg-gray-50">
+                            {filtered.map((t, index) => (
+                                <tr
+                                    key={t._id}
+                                    className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-gray-100`}
+                                >
                                     <td className="px-4 py-2 border">{t.type}</td>
                                     <td className="px-4 py-2 border">{t.source || t.category}</td>
                                     <td className="px-4 py-2 border">KES {t.amount.toLocaleString()}</td>
