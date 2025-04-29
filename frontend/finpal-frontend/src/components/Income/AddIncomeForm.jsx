@@ -36,7 +36,7 @@ const AddIncomeForm = ({ onAddIncome }) => {
         onChange={({ target }) => handleChange("phoneNumber", target.value)}
         label="Phone number"
         placeholder="07 00 .. (M-pesa phone number)"
-        type="text"
+type="text"
       />
 
       <Input

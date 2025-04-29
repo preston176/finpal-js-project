@@ -56,6 +56,7 @@ const Expense = () => {
     if (!category.trim()) {
       toast.error("Category is required.");
       return;
+      
     }
 
     if (!amount || isNaN(amount) || Number(amount) <= 0) {
