@@ -1,12 +1,36 @@
+
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 import { useEffect, useState } from 'react';
 import Sidebar from './components/sidebar';
 import axiosInstance from '../../utils/axiosInstance';
+import { Download } from "lucide-react";
 
 function Users() {
     const [users, setUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [search, setSearch] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
+
+
+    const exportToExcel = () => {
+        const exportData = filteredUsers.map(user => ({
+            ID: user._id,
+            Name: user.fullName,
+            Email: user.email,
+            Disabled: user.disabled ? "Yes" : "No",
+            CreatedAt: new Date(user.createdAt).toLocaleString(),
+            UpdatedAt: new Date(user.updatedAt).toLocaleString(),
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(exportData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
+
+        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+        saveAs(data, "users.xlsx");
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -88,6 +112,17 @@ function Users() {
                         <option value="active">Active Users</option>
                         <option value="disabled">Disabled Users</option>
                     </select>
+
+                    <div className="flex justify-end mb-4">
+                        <button
+                            onClick={exportToExcel}
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow flex gap-2"
+                        >
+                            <span><Download />
+                            </span>
+                            Export to Sheet
+                        </button>
+                    </div>
                 </div>
 
                 {/* Table */}

@@ -33,7 +33,7 @@ const Transactions = () => {
         .filter((t) =>
             (filter === 'All' || t.type === filter) &&
             (t.source?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-             t.category?.toLowerCase().includes(searchQuery.toLowerCase()))
+                t.category?.toLowerCase().includes(searchQuery.toLowerCase()))
         )
         .sort((a, b) => {
             const valueA = sortKey === 'amount' ? a.amount : new Date(a.date).getTime();
@@ -61,7 +61,7 @@ const Transactions = () => {
                             placeholder="Search source or category..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="px-4 py-2 border rounded-lg w-60"
+                            className="p-2 mx-3 border rounded-lg w-60"
                         />
 
                         <select
@@ -94,11 +94,12 @@ const Transactions = () => {
 
                         <div className="flex">
                             <button
-                                className='border rounded-sm px-4 flex gap-2 items-center cursor-pointer'
                                 onClick={exportToExcel}
+                                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow flex gap-2 cursor-pointer"
                             >
-                                <Download />
-                                <span>Export to Excel</span>
+                                <span><Download />
+                                </span>
+                                Export to Sheet
                             </button>
                         </div>
                     </div>

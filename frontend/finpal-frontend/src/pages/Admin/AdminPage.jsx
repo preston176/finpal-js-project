@@ -1,8 +1,25 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from './components/sidebar';
+import { useState } from 'react';
+import axiosInstance from '../../utils/axiosInstance';
+import { useEffect } from 'react';
 
 function AdminPage() {
+    const [totalUsers, setTotalUsers] = useState(0)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const { data } = await axiosInstance.get("http://localhost:8000/api/admin/users");
+                if (data) {
+                    setTotalUsers(data);
+                }
+            } catch (err) {
+                console.error("Fetching users failed", err);
+            }
+        };
+        fetchData();
+    }, []);
 
 
 
@@ -17,16 +34,22 @@ function AdminPage() {
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                     {/* Mock values */}
                     <div className="p-4 bg-white shadow rounded">
-                        <h2 className="text-lg font-semibold">Total Users</h2>
-                        <p className="text-2xl font-bold">1,234</p>
+                        <Link to="/admin/users">
+                            <h2 className="text-lg font-semibold">Total Users</h2>
+                            <p className="text-2xl font-bold">{totalUsers?.length}</p>
+                        </Link>
                     </div>
                     <div className="p-4 bg-white shadow rounded">
-                        <h2 className="text-lg font-semibold">Transactions Amount</h2>
-                        <p className="text-2xl font-bold">$56,789</p>
+                        <Link to="/admin/transactions">
+                            <h2 className="text-lg font-semibold">Transactions Amount</h2>
+                            <p className="text-2xl font-bold">Kes 56,789</p>
+                        </Link>
                     </div>
                     <div className="p-4 bg-white shadow rounded">
-                        <h2 className="text-lg font-semibold">Transactions done</h2>
-                        <p className="text-2xl font-bold">12</p>
+                        <Link to="/admin/transactions">
+                            <h2 className="text-lg font-semibold">Transactions done</h2>
+                            <p className="text-2xl font-bold">12</p>
+                        </Link>
                     </div>
                 </div>
             </div>
