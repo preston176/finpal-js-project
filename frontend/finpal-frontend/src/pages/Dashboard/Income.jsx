@@ -50,13 +50,15 @@ const Income = () => {
   const handleAddIncome = async (income) => {
     const { source, amount, date, icon, phoneNumber } = income;
 
+
+
     // Validation Checks
     if (!source.trim()) {
       toast.error("Source is required.");
       return;
     }
 
-    if (!amount || isNaN(amount) || !phoneNumber || Number(amount) <= 0) {
+    if (!amount || isNaN(amount) || Number(amount) <= 0) {
       toast.error("Amount should be a valid number greater than 0.");
       return;
     }

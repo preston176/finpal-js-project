@@ -107,6 +107,7 @@ const SignUpForm = () => {
               onChange={({ target }) => setPhoneNumber(target.value)}
               label="Phone Number (For making payments)"
               placeholder="07 01 ...."
+              length={30}
               type="number"
             />
 
