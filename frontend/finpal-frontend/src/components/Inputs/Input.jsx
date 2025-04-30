@@ -18,7 +18,6 @@ const Input = ({ label, value, onChange, placeholder, type, className = "", leng
           placeholder={placeholder}
           className={className ? className : "w-full bg-transparent outline-none"}
           value={value}
-          max={length}
           onChange={(e) => onChange(e)}
         />
 
