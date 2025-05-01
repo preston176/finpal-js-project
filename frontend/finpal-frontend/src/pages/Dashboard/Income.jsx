@@ -78,26 +78,28 @@ const Income = () => {
 
       // (Optional) Trigger M-Pesa Integration
 
-      const parsedPhonenumber = phoneNumber.startsWith("0")
-        ? "254" + phoneNumber.slice(1)
-        : phoneNumber;
+      // const parsedPhonenumber = phoneNumber.startsWith("0")
+      //   ? "254" + phoneNumber.slice(1)
+      //   : phoneNumber;
 
-      const mpesa = await fetch("https://nodejs-mpesa-integration.onrender.com/lipa/stkpush", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ amount: amount, phone: parsedPhonenumber }),
-      });
+        // console.log(phoneNumber)
+
+
+      // const mpesa = await fetch("https://nodejs-mpesa-integration.onrender.com/lipa/stkpush", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({ amount: amount, phone: parsedPhonenumber }),
+      // });
 
       // console.log(mpesa);
-      if (mpesa.status == "201") {
+      // if (mpesa.status == "201") {
         setOpenAddIncomeModal(false);
         toast.success("Income added successfully");
         fetchIncomeDetails();
         return;
-      }
-      console.error("M-pesa payment not successful")
+      // }
     } catch (error) {
       console.error(
         "Error adding income:",

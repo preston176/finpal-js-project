@@ -13,6 +13,7 @@ const AddIncomeForm = ({ onAddIncome }) => {
     amount: "",
     date: new Date(),
     icon: "",
+    phoneNumber: ""
   });
 
   const handleChange = (key, value) => setIncome({ ...income, [key]: value });
@@ -35,7 +36,7 @@ const AddIncomeForm = ({ onAddIncome }) => {
         value={user?.phoneNumber}
         onChange={({ target }) => handleChange("phoneNumber", target.value)}
         label="Phone number"
-        length={10}
+        length={20}
         placeholder="07 00 .. (M-pesa phone number)"
         type="text"
       />

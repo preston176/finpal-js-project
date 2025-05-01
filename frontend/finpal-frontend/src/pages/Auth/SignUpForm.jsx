@@ -43,6 +43,11 @@ const SignUpForm = () => {
       return;
     }
 
+    if (!phoneNumber || phoneNumber.length !== 10) {
+      setError("Please enter phone number");
+      return
+    }
+
     setError("");
 
     // SignUp API Call
@@ -107,8 +112,7 @@ const SignUpForm = () => {
               onChange={({ target }) => setPhoneNumber(target.value)}
               label="Phone Number (For making payments)"
               placeholder="07 01 ...."
-              length={30}
-              type="number"
+              type="text"
             />
 
             <Input
