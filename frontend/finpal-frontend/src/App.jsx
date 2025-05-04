@@ -35,6 +35,7 @@ const App = () => {
           </Routes>
         </Router>
 
+        {/* Toast notifications */}
         <Toaster
           toastOptions={{
             className: "",
